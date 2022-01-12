@@ -13,18 +13,19 @@ namespace beatsabermusic
         public static void Main(string[] args)
         {
             Console.WriteLine("Please enter your custom song folder.");
-                var CustomSongPath = Console.ReadLine();
+                //var CustomSongPath = Console.ReadLine().Replace("\\","/")+ "/";
+                var CustomSongPath = @"C:\Users\Julie\3D Objects\Custom_Songs".Replace("\\","/")+ "/";
                 Console.WriteLine("Please enter the folder where your want your songs to be put in. (dangerous, be careful and put the CORRECT folder please)");
-                var SongFolderPath = Console.ReadLine();
+                //var SongFolderPath = Console.ReadLine().Replace("\\","/")+ "/";
+                var SongFolderPath = @"C:\Users\Julie\3D Objects\songs2".Replace("\\","/") + "/";
                 int Fails = 0;
 
                 foreach (var Diretory in Directory.GetDirectories(CustomSongPath))
                 { 
                     try
                     {
-                        var MapInfo = new Info($"{Diretory}\\Info.dat");
+                        var MapInfo = new Info($"{Diretory}");
                         
-                        MapInfo._songName = MapInfo._songName;
                         Directory.CreateDirectory($"{SongFolderPath}\\{MapInfo._songAuthorName}\\");
                         if (File.Exists($"{SongFolderPath}\\{MapInfo._songAuthorName}\\{MapInfo._songName}.ogg"))
                             continue;
