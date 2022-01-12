@@ -9,15 +9,7 @@ namespace beatsabermusic
 {
     internal class Program
     {
-        private static string RemoveSpecialCharacters(string str)
-        {
-            var stringBuilder = new StringBuilder();
-            foreach (var c in str.Where(c => c is >= '0' and <= '9' or >= 'A' and <= 'Z' or >= 'a' and <= 'z' or '_' or ' '))
-                stringBuilder.Append(c);
-            return stringBuilder.ToString();
-        }
-        
-        
+
         public static void Main(string[] args)
         {
             Console.WriteLine("Please enter your custom song folder.");
@@ -30,13 +22,9 @@ namespace beatsabermusic
                 { 
                     try
                     {
-                        var MapInfo = new Info();
-                        using (var stream = new StreamReader($"{Diretory}\\Info.dat") )
-                        {
-                            MapInfo = JsonConvert.DeserializeObject<Info>(stream.ReadToEnd());
-                        }
+                        var MapInfo = new Info($"{Diretory}\\Info.dat");
                         
-                        MapInfo._songName = RemoveSpecialCharacters(MapInfo._songName);
+                        MapInfo._songName = MapInfo._songName;
                         Directory.CreateDirectory($"{SongFolderPath}\\{MapInfo._songAuthorName}\\");
                         if (File.Exists($"{SongFolderPath}\\{MapInfo._songAuthorName}\\{MapInfo._songName}.ogg"))
                             continue;
@@ -53,11 +41,31 @@ namespace beatsabermusic
         }
     }
 
-    class Info
+    struct Info
     {
+        private static string RemoveSpecialCharacters(string str)
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var c in str.Where(c => c is >= '0' and <= '9' or >= 'A' and <= 'Z' or >= 'a' and <= 'z' or '_' or ' '))
+                stringBuilder.Append(c);
+            return stringBuilder.ToString();
+        }
+        
         public string _songName { get; set; }
         public string _songAuthorName { get; set; }
         public string _songFilename { get; set; }
+
+        public Info(string Directory)
+        {
+            using (var stream = new StreamReader($"{Directory}\\Info.dat") )
+            {
+                this = JsonConvert.DeserializeObject<Info>(stream.ReadToEnd());
+            }
+
+            _songName = RemoveSpecialCharacters(_songName);
+            _songAuthorName = RemoveSpecialCharacters(_songAuthorName);
+
+        }
     }
     
 }
